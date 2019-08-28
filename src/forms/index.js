@@ -1,63 +1,60 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Form, Row } from 'reactstrap'
 import { InputForm, Select, Check } from './input'
 
-export default class DynamicForm extends Component {
-  state = {}
-  defaultValues = {
-    buttonText: 'Accept'
-  }
+export const DynamicForm = (props) => {
+  const initialState = {}
 
-  constructor (props) {
-    super(props)
-    const defaults = props.model.filter(x => x.value)
-    defaults.forEach(x => { this.state[x.keys] = x.value })
-  }
+  useEffect(() => {
+    props.model.filter(x => x.value).forEach(x => {
+      initialState[x.keys] = x.value
+    })
+  }, [])
 
-  handleSubmit = e => {
-    e.preventDefault()
-    this.props.handleSubmit && this.props.handleSubmit(this.state)
-  }
+  const [state, setState] = useState(initialState)
 
-  onChange = (e, key, type = '') => {
+  const renderForm = () => props.model.map(x => {
+    switch (x.type) {
+      default:
+        return <InputForm key={x.keys} {...x} innerRef={key => { window[x.keys] = key }} handleChange={e => handleChange(e, x.keys)} current={state[x.keys]} />
+      case 'select':
+        return <Select key={x.keys} {...x} innerRef={key => { window[x.keys] = key }} handleChange={e => handleChange(e, x.keys)} />
+      case 'radio':
+      case 'checkbox':
+        return <Check key={x.keys} {...x} innerRef={key => { window[x.keys] = key }} handleChange={e => handleChange(e, x.keys, x.type)} current={state[x.keys]} />
+    }
+  })
+
+  const handleChange = (e, key, type = '') => {
     if (type === 'checkbox') {
-      const found = this.state[key] && this.state[key].find(d => d === e.target.value)
+      const found = state[key] && state[key].find(d => d === e.target.value)
 
       if (found) {
-        const data = this.state[key].filter(x => x !== found)
-        this.setState({ [key]: data })
+        const data = state[key].filter(x => x !== found)
+        setState({ ...state, [key]: data })
       } else {
-        const other = this.state[key] ? [...this.state[key]] : []
-        this.setState({
+        const other = state[key] ? [...state[key]] : []
+        setState({
           [key]: [e.target.value, ...other]
         })
       }
     } else {
-      this.setState({ [key]: e.target.value })
+      setState({ ...state, [key]: e.target.value })
     }
   }
 
-  renderForm = () => this.props.model.map((x, i) => {
-    switch (x.type) {
-      default:
-        return <InputForm key={x.keys} {...x} innerRef={key => { this[x.keys] = key }} onChange={e => this.onChange(e, x.keys)} current={this.state[x.keys]} />
-      case 'select':
-        return <Select key={x.keys} {...x} innerRef={key => { this[x.keys] = key }} onChange={e => this.onChange(e, x.keys)} />
-      case 'radio':
-      case 'checkbox':
-        return <Check key={x.keys} {...x} innerRef={key => { this[x.keys] = key }} onChange={e => this.onChange(e, x.keys, x.type)} current={this.state[x.keys]} />
-    }
-  })
-
-  render () {
-    return (
-      <Form onSubmit={e => { this.handleSubmit(e) }} className='mx-5'>
-        {this.props.title && <h3>{this.props.title}</h3>}
-        <Row>
-          {this.renderForm()}
-        </Row>
-        <Button type='submit'>{this.props.buttonText || this.defaultValues.buttonText}</Button>
-      </Form>
-    )
+  const handleSubmit = e => {
+    e.preventDefault()
+    props.handleSubmit && props.handleSubmit()
   }
+
+  return (
+    <Form onSubmit={e => { handleSubmit(e) }} className='mx-5'>
+      {props.title && <h3>{props.title}</h3>}
+      <Row>
+        {renderForm()}
+      </Row>
+      <Button type='submit'>{props.buttonText || 'Submit'}</Button>
+    </Form>
+  )
 }

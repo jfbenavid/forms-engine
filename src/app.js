@@ -1,5 +1,5 @@
 import React from 'react'
-import DynamicForm from './forms'
+import { DynamicForm } from './forms'
 import { sm, md, xs } from './bootstrapClasses'
 
 const model = [
@@ -60,7 +60,7 @@ const model = [
       { key: 3, value: 'test 3' }
     ],
     className: [md[8], sm[6]]
-  },
+  }
 ]
 
 const handleSubmit = model => {

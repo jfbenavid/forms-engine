@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormGroup, Label, Input } from 'reactstrap'
 
-export const InputForm = ({ keys, className = [], label = '', props = {}, type, onChange, innerRef, value = '', current = value }) => (
+export const InputForm = ({ keys, className = [], label = '', props = {}, type, handleChange, innerRef, value = '', current = value }) => (
   <FormGroup key={keys} className={className.join(' ')}>
     <Label htmlFor={keys} key={`l${keys}`}>
       {label}
@@ -11,13 +11,13 @@ export const InputForm = ({ keys, className = [], label = '', props = {}, type, 
       key={`i${keys}`}
       innerRef={innerRef}
       type={type}
-      onChange={onChange}
+      onChange={handleChange}
       value={current}
     />
   </FormGroup>
 )
 
-export const Select = ({ keys, className = [], label = '', props = {}, type, options = [], onChange, innerRef, value = '', unselectedText = '', hiddenUnselected = false, disabledUnselected = false }) => (
+export const Select = ({ keys, className = [], label = '', props = {}, type, options = [], handleChange, innerRef, value = '', unselectedText = '', hiddenUnselected = false, disabledUnselected = false }) => (
   <FormGroup key={keys} className={className.join(' ')}>
     <Label htmlFor={keys} key={`l${keys}`}>
       {label}
@@ -27,7 +27,7 @@ export const Select = ({ keys, className = [], label = '', props = {}, type, opt
       key={`i${keys}`}
       innerRef={innerRef}
       type={type}
-      onChange={onChange}
+      onChange={handleChange}
       defaultValue={value}
     >
       <option value='default' hidden={hiddenUnselected} disabled={disabledUnselected}>{unselectedText || 'Select'}</option>
@@ -40,7 +40,7 @@ export const Select = ({ keys, className = [], label = '', props = {}, type, opt
   </FormGroup>
 )
 
-export const Check = ({ keys, className = [], label = '', props = {}, type, options = [], onChange, innerRef, inline = true, value = '', current = value }) => (
+export const Check = ({ keys, className = [], label = '', props = {}, type, options = [], handleChange, innerRef, inline = true, value = '', current = value }) => (
   <FormGroup key={keys} className={className.join(' ')}>
     <legend className='col-form-label'>{label}</legend>
     {
@@ -58,7 +58,7 @@ export const Check = ({ keys, className = [], label = '', props = {}, type, opti
                 {...props}
                 innerRef={innerRef}
                 type={type}
-                onChange={onChange}
+                onChange={handleChange}
                 name={keys}
                 key={`i${keys}${i}`}
                 value={x.key}
