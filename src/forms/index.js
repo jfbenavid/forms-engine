@@ -10,8 +10,8 @@ export default class DynamicForm extends Component {
 
   constructor (props) {
     super(props)
-    const defaults = props.model.filter(x => x.defaultValue)
-    defaults.forEach(x => { this.state[x.keys] = x.defaultValue })
+    const defaults = props.model.filter(x => x.value)
+    defaults.forEach(x => { this.state[x.keys] = x.value })
   }
 
   handleSubmit = e => {
