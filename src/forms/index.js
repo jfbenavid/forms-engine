@@ -20,21 +20,36 @@ export default class DynamicForm extends Component {
     this.props.handleSubmit && this.props.handleSubmit(this.state)
   }
 
-  onChange = (e, key) => this.setState({
-    [key]: e.target.value
-  })
+  onChange = (e, key, type = '') => {
+    if (type === 'checkbox') {
+      const found = this.state[key] && this.state[key].find(d => d === e.target.value)
+
+      if (found) {
+        const data = this.state[key].filter(x => x !== found)
+        this.setState({ [key]: data })
+      } else {
+        const other = this.state[key] ? [...this.state[key]] : []
+        this.setState({
+          [key]: [e.target.value, ...other]
+        })
+      }
+    } else {
+      this.setState({ [key]: e.target.value })
+    }
+  }
 
   renderForm = () => this.props.model.map((x, i) => {
     switch (x.type) {
       case 'input':
       case 'number':
+      case 'datetime':
       default:
-        return <InputForm key={x.keys} {...x} innerRef={key => { this[x.keys] = key }} onChange={e => this.onChange(e, x.keys)} />
+        return <InputForm key={x.keys} {...x} innerRef={key => { this[x.keys] = key }} onChange={e => this.onChange(e, x.keys)} current={this.state[x.keys]} />
       case 'select':
         return <Select key={x.keys} {...x} innerRef={key => { this[x.keys] = key }} onChange={e => this.onChange(e, x.keys)} />
       case 'radio':
       case 'checkbox':
-        return <Check key={x.keys} {...x} innerRef={key => { this[x.keys] = key }} onChange={e => this.onChange(e, x.keys)} current={this.state[x.keys]} />
+        return <Check key={x.keys} {...x} innerRef={key => { this[x.keys] = key }} onChange={e => this.onChange(e, x.keys, x.type)} current={this.state[x.keys]} />
     }
   })
 

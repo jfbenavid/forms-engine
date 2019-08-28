@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormGroup, Label, Input } from 'reactstrap'
 
-export const InputForm = ({ keys, className = [], label = '', props = {}, type, onChange, innerRef, defaultValue = '' }) => (
+export const InputForm = ({ keys, className = [], label = '', props = {}, type, onChange, innerRef, defaultValue = '', current = defaultValue }) => (
   <FormGroup key={keys} className={className.join(' ')}>
     <Label htmlFor={keys} key={`l${keys}`}>
       {label}
@@ -12,7 +12,7 @@ export const InputForm = ({ keys, className = [], label = '', props = {}, type, 
       innerRef={innerRef}
       type={type}
       onChange={onChange}
-      value={defaultValue}
+      value={current}
     />
   </FormGroup>
 )
@@ -44,7 +44,12 @@ export const Check = ({ keys, className = [], label = '', props = {}, type, opti
     <legend className='col-form-label'>{label}</legend>
     {
       options.map((x, i) => {
-        const checked = current && x.value === current
+        let checked = false
+        if (type === 'checkbox') {
+          checked = (current && current.length > 0) && current.indexOf(x.value) > -1
+        } else {
+          checked = current && x.value === current
+        }
         return (
           <FormGroup key={`${keys}${i}`} check inline={inline}>
             <Label key={`l${keys}${i}`} check>

@@ -3,7 +3,7 @@ import DynamicForm from './forms'
 import { sm, md } from './bootstrapClasses'
 
 const model = [
-  { keys: 'name', label: 'Name', props: { required: true }, className: [sm[6], md[6]], defaultValue: 'sddf' },
+  { keys: 'name', label: 'Name', type: 'datetime', props: { required: true, placeholder: 'testing' }, className: [sm[6], md[6]], defaultValue: 'sddf' },
   { keys: 'rating', label: 'Rating', type: 'number', props: { min: 0, max: 5 }, className: [md[6]], defaultValue: '0' },
   {
     keys: 'drop',
@@ -22,7 +22,7 @@ const model = [
     keys: 'decide',
     label: 'Radio',
     type: 'radio',
-    inline: false,
+    inline: true,
     className: [md[3]],
     defaultValue: 'yes',
     options: [
@@ -34,8 +34,9 @@ const model = [
     keys: 'deciding',
     label: 'Checkbox',
     type: 'checkbox',
-    inline: false,
-    className: [md[3]],
+    inline: true,
+    className: [md[2]],
+    defaultValue: [],
     options: [
       { key: 'yes', value: 'yes', checked: true },
       { key: 'no', value: 'no' }
