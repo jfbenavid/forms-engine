@@ -1,31 +1,46 @@
 import React from 'react'
 import DynamicForm from './forms'
+import { sm, md } from './bootstrapClasses'
 
 const model = [
-  [
-    { key: 'name', label: 'Name', props: { required: true }, cols: { sm: 12, md: 6 } },
-    { key: 'age', label: 'Age', type: 'number', props: { required: true }, cols: { md: 6 } }
-  ],
-  [
-    { key: 'rating', label: 'Rating', type: 'number', props: { min: 0, max: 5 }, cols: { md: 3 } },
-    {
-      key: 'drop',
-      label: 'DropDown',
-      type: 'select',
-      props: { required: true },
-      options: [
-        { key: 1, value: 'test 1' },
-        { key: 2, value: 'test 2' },
-        { key: 3, value: 'test 3' }
-      ],
-      cols: { md: 9 }
-    }
-  ],
-  [
-    { key: 'qualification', label: 'Qualification', cols: { md: 6 } },
-    { key: 'radio1', label: 'radio 1', type: 'radio', cols: { md: 3 }, props: { name: 'radio' }, value: 1 },
-    { key: 'radio2', label: 'radio 2', type: 'radio', cols: { md: 3 }, props: { name: 'radio' }, value: 2 }
-  ]
+  { keys: 'name', label: 'Name', props: { required: true }, className: [sm[6], md[6]], defaultValue: 'sddf' },
+  { keys: 'rating', label: 'Rating', type: 'number', props: { min: 0, max: 5 }, className: [md[6]], defaultValue: '0' },
+  {
+    keys: 'drop',
+    label: 'DropDown',
+    type: 'select',
+    props: { required: true },
+    defaultValue: 'yes',
+    options: [
+      { key: 1, value: 'test 1' },
+      { key: 2, value: 'test 2' },
+      { key: 3, value: 'test 3' }
+    ],
+    className: [md[9]]
+  },
+  {
+    keys: 'decide',
+    label: 'Radio',
+    type: 'radio',
+    inline: false,
+    className: [md[3]],
+    defaultValue: 'yes',
+    options: [
+      { key: 'yes', value: 'yes' },
+      { key: 'no', value: 'no' }
+    ]
+  },
+  {
+    keys: 'deciding',
+    label: 'Checkbox',
+    type: 'checkbox',
+    inline: false,
+    className: [md[3]],
+    options: [
+      { key: 'yes', value: 'yes', checked: true },
+      { key: 'no', value: 'no' }
+    ]
+  }
 ]
 
 const handleSubmit = model => {
