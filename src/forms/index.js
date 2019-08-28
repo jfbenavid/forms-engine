@@ -5,7 +5,6 @@ import { InputForm, Select, Check } from './input'
 export default class DynamicForm extends Component {
   state = {}
   defaultValues = {
-    title: 'This is a Title',
     buttonText: 'Accept'
   }
 
@@ -40,9 +39,6 @@ export default class DynamicForm extends Component {
 
   renderForm = () => this.props.model.map((x, i) => {
     switch (x.type) {
-      case 'input':
-      case 'number':
-      case 'datetime':
       default:
         return <InputForm key={x.keys} {...x} innerRef={key => { this[x.keys] = key }} onChange={e => this.onChange(e, x.keys)} current={this.state[x.keys]} />
       case 'select':
@@ -56,7 +52,7 @@ export default class DynamicForm extends Component {
   render () {
     return (
       <Form onSubmit={e => { this.handleSubmit(e) }} className='mx-5'>
-        <h3>{this.props.title || this.defaultValues.title}</h3>
+        {this.props.title && <h3>{this.props.title}</h3>}
         <Row>
           {this.renderForm()}
         </Row>

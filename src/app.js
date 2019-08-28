@@ -3,7 +3,7 @@ import DynamicForm from './forms'
 import { sm, md } from './bootstrapClasses'
 
 const model = [
-  { keys: 'name', label: 'Name', type: 'datetime', props: { required: true, placeholder: 'testing' }, className: [sm[6], md[6]], defaultValue: 'sddf' },
+  { keys: 'name', label: 'Name', props: { required: true, placeholder: 'testing placeholder' }, className: [sm[6], md[6]], defaultValue: 'text test' },
   { keys: 'rating', label: 'Rating', type: 'number', props: { min: 0, max: 5 }, className: [md[6]], defaultValue: '0' },
   {
     keys: 'drop',
@@ -50,6 +50,6 @@ const handleSubmit = model => {
 
 export const App = () => {
   return (
-    <DynamicForm model={model} handleSubmit={model => handleSubmit(model)} />
+    <DynamicForm title='testing' model={model} handleSubmit={model => handleSubmit(model)} />
   )
 }
