@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Button, Form, Row } from 'reactstrap'
 import { InputForm, Select, Check } from './input'
+import { config } from '../../config/client'
 
-export default class DynamicForm extends Component {
+class DynamicForm extends Component {
   state = {}
   defaultValues = {
     buttonText: 'Accept'
@@ -12,6 +14,28 @@ export default class DynamicForm extends Component {
     super(props)
     const defaults = props.model.filter(x => x.value)
     defaults.forEach(x => { this.state[x.keys] = x.value })
+  }
+
+  componentDidMount () {
+    const obj = this.props.model.filter(x => x.options && x.options.constructor === Object)
+    if (obj.length > 0) {
+      obj.forEach(async (x, i) => {
+        const newOptions = []
+        await window.fetch(`${config.apiUrl}/${x.options.uri}`)
+          .then(y => y.json())
+          .then(y => {
+            newOptions.push(...(y[x.options.uriResponsePropertyName] || (Array.isArray(y) ? y : [])).map(r => ({
+              key: r[x.options.keyName],
+              value: r[x.options.valueName]
+            })))
+
+            obj[i].options = newOptions
+          })
+          .catch(y => console.log(`Error: ${y.message}`))
+      })
+
+      // this.props.model = this.props.model.map(o => obj.find(n => o.keys === n.keys) || o)
+    }
   }
 
   handleSubmit = e => {
@@ -34,7 +58,19 @@ export default class DynamicForm extends Component {
       }
     } else {
       this.setState({ [key]: e.target.value })
+      const obj = this.props.model.find(x => x.depends === key)
+      obj && this.dropDependency(e, obj)
     }
+  }
+
+  dropDependency = (e, obj) => {
+    window.fetch(`${config.apiUrl}/${obj.dependentUrl}/${e.target.value}`)
+      .then(x => x.json())
+      .then(x => {
+        obj.options = x
+        // this.model = this.model.map(y => y.)
+      })
+      .catch(x => console.log(`error: ${x.message}`))
   }
 
   renderForm = () => this.props.model.map((x, i) => {
@@ -61,3 +97,5 @@ export default class DynamicForm extends Component {
     )
   }
 }
+
+export default connect()(DynamicForm)

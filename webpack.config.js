@@ -1,4 +1,5 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const env = require('./config/setup')
 
 module.exports = {
   output: {
@@ -18,7 +19,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['@babel/preset-env', '@babel/react'],
-            plugins: [['@babel/plugin-proposal-class-properties']]
+            plugins: [['@babel/plugin-proposal-class-properties'], ['transform-define', env], ['@babel/plugin-transform-runtime']]
           }
         }
       },
@@ -27,5 +28,8 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       }
     ]
+  },
+  node: {
+    fs: 'empty'
   }
 }

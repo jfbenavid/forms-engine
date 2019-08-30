@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 import DynamicForm from './forms'
 import { sm, md, xs } from './bootstrapClasses'
 
@@ -11,14 +12,15 @@ const model = [
     type: 'select',
     props: { required: true },
     unselectedText: 'Select an option',
-    hiddenUnselected: false,
-    disabledUnselected: true,
+    hiddenUnselected: true,
+    disabledUnselected: false,
     value: 'default',
-    options: [
-      { key: 1, value: 'test 1' },
-      { key: 2, value: 'test 2' },
-      { key: 3, value: 'test 3' }
-    ],
+    options: {
+      uri: 'films/',
+      keyName: 'title',
+      valueName: 'episode_id',
+      uriResponsePropertyName: 'results'
+    },
     className: [md[8], sm[6]]
   },
   {
@@ -52,23 +54,26 @@ const model = [
     props: { required: true },
     unselectedText: 'Select an option',
     hiddenUnselected: false,
-    disabledUnselected: true,
+    disabledUnselected: false,
     value: 'default',
-    options: [
-      { key: 1, value: 'test 1' },
-      { key: 2, value: 'test 2' },
-      { key: 3, value: 'test 3' }
-    ],
+    depends: 'drop',
+    dependentUrl: 'https://swapi.co/api/films/',
     className: [md[8], sm[6]]
-  },
+  }
 ]
 
 const handleSubmit = model => {
   console.log(JSON.stringify(model))
 }
 
-export const App = () => {
+// const getCharacter = x => new Promise((resolve, reject) => )
+
+const App = () => {
   return (
     <DynamicForm title='testing' model={model} handleSubmit={model => handleSubmit(model)} />
   )
 }
+
+const mapStateToProps = state => ({})
+
+export default connect(mapStateToProps, null)(App)

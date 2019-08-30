@@ -1,6 +1,12 @@
 import React from 'react'
 import { FormGroup, Label, Input } from 'reactstrap'
 
+const renderSelectOptions = ({ options } = {}) => {
+  return Array.isArray(options) && options.map(o => (
+    <option key={o.key} value={o.key}>{o.value}</option>
+  ))
+}
+
 export const InputForm = ({ keys, className = [], label = '', props = {}, type, onChange, innerRef, value = '', current = value }) => (
   <FormGroup key={keys} className={className.join(' ')}>
     <Label htmlFor={keys} key={`l${keys}`}>
@@ -17,7 +23,7 @@ export const InputForm = ({ keys, className = [], label = '', props = {}, type, 
   </FormGroup>
 )
 
-export const Select = ({ keys, className = [], label = '', props = {}, type, options = [], onChange, innerRef, value = '', unselectedText = '', hiddenUnselected = false, disabledUnselected = false }) => (
+export const Select = ({ keys, className = [], label = '', props = {}, type, options = [], onChange, innerRef, value = 'default', unselectedText = '', hiddenUnselected = false, disabledUnselected = false }) => (
   <FormGroup key={keys} className={className.join(' ')}>
     <Label htmlFor={keys} key={`l${keys}`}>
       {label}
@@ -31,11 +37,7 @@ export const Select = ({ keys, className = [], label = '', props = {}, type, opt
       defaultValue={value}
     >
       <option value='default' hidden={hiddenUnselected} disabled={disabledUnselected}>{unselectedText || 'Select'}</option>
-      {
-        options.map(o => (
-          <option key={o.key} value={o.key}>{o.value}</option>
-        ))
-      }
+      {renderSelectOptions(options)}
     </Input>
   </FormGroup>
 )
