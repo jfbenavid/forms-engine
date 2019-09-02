@@ -98,4 +98,6 @@ class DynamicForm extends Component {
   }
 }
 
-export default connect()(DynamicForm)
+const mapStateToProps = state => ({ ...state })
+
+export default connect(mapStateToProps)(DynamicForm)
