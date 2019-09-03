@@ -1,2 +1,2 @@
-# forms-engine
-This is a forms engine to create forms from json objects.
+# Forms Engine
+This is a form engine to create forms from json objects.

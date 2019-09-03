@@ -1,4 +1,4 @@
-import { sm, md, xs } from '../bootstrapClasses'
+import { sm, md, xs } from '../bootstrap-classes'
 
 export const model = [
   { keys: 'name', label: 'Name', props: { required: true, placeholder: 'testing placeholder' }, className: [sm[6], md[6]], value: 'text test' },
