@@ -1,27 +1,28 @@
 import { sm, md, xs } from '../bootstrap-classes'
 
 export const model = [
-  { keys: 'name', label: 'Name', props: { required: true, placeholder: 'testing placeholder' }, className: [sm[6], md[6]], value: 'text test' },
-  { keys: 'rating', label: 'Rating', type: 'number', props: { min: 0, max: 5 }, className: [md[6]], value: '0' },
+  { id: 'name', label: 'Name', props: { required: true, placeholder: 'testing placeholder' }, className: [sm[6], md[6]], value: 'text test' },
+  { id: 'rating', label: 'Rating', type: 'number', props: { min: 0, max: 5 }, className: [md[6]], value: '0' },
   {
-    keys: 'drop',
+    id: 'drop',
     label: 'DropDown',
     type: 'select',
     props: { required: true },
     unselectedText: 'Select an option',
     hiddenUnselected: true,
     disabledUnselected: false,
-    value: 'default',
-    options: {
+    value: '1',
+    fillOptions: {
       uri: 'films/',
-      keyName: 'title',
-      valueName: 'episode_id',
+      displayKeyName: 'title',
+      valueKeyName: 'episode_id',
       uriResponsePropertyName: 'results'
     },
+    options: [],
     className: [md[8], sm[6]]
   },
   {
-    keys: 'radio',
+    id: 'radio',
     label: 'Radio',
     type: 'radio',
     inline: true,
@@ -33,7 +34,7 @@ export const model = [
     ]
   },
   {
-    keys: 'check',
+    id: 'check',
     label: 'Checkbox',
     type: 'checkbox',
     inline: false,
@@ -45,7 +46,7 @@ export const model = [
     ]
   },
   {
-    keys: 'drop2',
+    id: 'drop2',
     label: 'Dependency DropDown',
     type: 'select',
     props: { required: true },
@@ -53,8 +54,14 @@ export const model = [
     hiddenUnselected: false,
     disabledUnselected: false,
     value: 'default',
-    depends: 'drop',
-    dependentUrl: 'https://swapi.co/api/films/',
+    depends: {
+      from: 'drop',
+      uri: 'films',
+      displayKeyName: 'title',
+      valueKeyName: 'episode_id',
+      uriResponsePropertyName: 'results'
+    },
+    options: [],
     className: [md[8], sm[6]]
   }
 ]
