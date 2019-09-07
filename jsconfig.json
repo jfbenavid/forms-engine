@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
-      "module": "es2016"
-  }
+      "target": "es2016"
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
