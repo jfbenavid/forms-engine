@@ -28,6 +28,7 @@ export const InputForm = (p) => {
       <Input
         {...props}
         key={`i${id}`}
+        id={id}
         innerRef={innerRef}
         type={type}
         onChange={onChange}
@@ -61,6 +62,7 @@ export const Select = (p) => {
       <Input
         {...props}
         key={`i${id}`}
+        id={id}
         innerRef={innerRef}
         type={type}
         onChange={onChange}
@@ -113,6 +115,7 @@ export const Check = (p) => {
                   innerRef={innerRef}
                   type={type}
                   onChange={onChange}
+                  id={id}
                   name={id}
                   key={`i${id}${i}`}
                   value={x.key}
