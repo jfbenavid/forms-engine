@@ -8,29 +8,29 @@ import * as appActs from '../../state/modules/form/actions'
 
 const DynamicForm = (props) => {
   const { title, buttonText, model, appActions } = props
+
   const defaultState = {}
   const defaults = model && [...model.filter(x => x.value)]
   defaults && defaults.forEach(x => {
     defaultState[x.id] = x.value
   })
-  const [formState, setFormState] = useState(defaultState)
+
+  const [state, setState] = useState(defaultState)
   const inputRef = useRef({})
 
   useEffect(() => {
-    componentDidMount()
-  }, [])
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    props.handleSubmit && props.handleSubmit(formState)
-  }
-
-  const componentDidMount = () => {
     const obj = model && model.filter(x => x.fillOptions)
     if (obj && obj.length > 0) {
       obj.forEach(async (x, i) => {
         const newOptions = []
-        await window.fetch(`${config.apiUrl}/${x.fillOptions.uri}`)
+        let url = `${config.apiUrl}/${x.fillOptions.uri}`
+        if (x.fillOptions.depends) {
+          const dependent = model.find(y => y.id === x.fillOptions.depends).value
+          if (dependent) {
+            url += `/${dependent}`
+          }
+        }
+        await window.fetch(url)
           .then(y => y.json())
           .then(y => {
             newOptions.push(
@@ -42,22 +42,23 @@ const DynamicForm = (props) => {
 
             obj[i].options = newOptions
             appActions && appActions.insertOptionsInDropdown({ name: 'model', data: obj[i] })
-            if (obj[i].value) {
-              const e = document.getElementById(obj[i].id)
-              e.value = obj[i].value
-              e.onChange()
-            }
           })
           .catch(y => console.log(`Error: ${y.message}`))
       })
     }
+  }, [])
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    props.handleSubmit && props.handleSubmit(state)
   }
 
   const dropDependency = (e, obj) => {
-    window.fetch(`${config.apiUrl}/${obj.depends.uri}/${e.target.value}/`)
+    window.fetch(`${config.apiUrl}/${obj.fillOptions.uri}/${e.target.value}/`)
       .then(x => x.json())
       .then(x => {
-        obj.options = x.characters.map((y, i) => ({ key: i + 1, value: y }))
+        obj.options = (x[obj.fillOptions.uriResponsePropertyName] || (Array.isArray(x) ? x : []))
+          .map(y => ({ key: y[obj.fillOptions.valueKeyName], value: y[obj.fillOptions.displayKeyName] }))
         props.appActions && props.appActions.insertOptionsInDropdown({ name: 'model', data: obj })
       })
       .catch(x => console.log(`error: ${x.message}`))
@@ -65,18 +66,18 @@ const DynamicForm = (props) => {
 
   const onChange = (e, key, type = '') => {
     if (type === 'checkbox') {
-      const found = formState[key] && formState[key].find(d => d === e.target.value)
+      const found = state[key] && state[key].find(d => d === e.target.value)
 
       if (found) {
-        const data = formState[key].filter(x => x !== found)
-        setFormState({ ...formState, [key]: data })
+        const data = state[key].filter(x => x !== found)
+        setState({ ...state, [key]: data })
       } else {
-        const other = formState[key] ? [...formState[key]] : []
-        setFormState({ ...formState, [key]: [e.target.value, ...other] })
+        const other = state[key] ? [...state[key]] : []
+        setState({ ...state, [key]: [e.target.value, ...other] })
       }
     } else {
-      setFormState({ ...formState, [key]: e.target.value })
-      const obj = model && model.find(x => x.depends && x.depends.from === key)
+      setState({ ...state, [key]: e.target.value })
+      const obj = model && model.find(x => x.fillOptions && x.fillOptions.depends === key)
       obj && dropDependency(e, obj)
     }
   }
@@ -91,7 +92,7 @@ const DynamicForm = (props) => {
               {...x}
               innerRef={key => { inputRef.current[x.id] = key }}
               onChange={e => onChange(e, x.id)}
-              current={formState[x.id]}
+              current={state[x.id]}
             />
           )
         case 'select':
@@ -101,6 +102,7 @@ const DynamicForm = (props) => {
               {...x}
               innerRef={key => { inputRef.current[x.id] = key }}
               onChange={e => onChange(e, x.id)}
+              current={state[x.id]}
             />
           )
         case 'radio':
@@ -111,7 +113,7 @@ const DynamicForm = (props) => {
               {...x}
               innerRef={key => { inputRef.current[x.id] = key }}
               onChange={e => onChange(e, x.id, x.type)}
-              current={formState[x.id]}
+              current={state[x.id]}
             />
           )
       }

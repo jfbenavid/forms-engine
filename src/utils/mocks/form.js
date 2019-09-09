@@ -11,12 +11,12 @@ export const model = [
     unselectedText: 'Select an option',
     hiddenUnselected: true,
     disabledUnselected: false,
-    value: '1',
+    value: '2',
     fillOptions: {
       uri: 'films/',
-      displayKeyName: 'title',
-      valueKeyName: 'episode_id',
-      uriResponsePropertyName: 'results'
+      displayKeyName: 'name',
+      valueKeyName: 'id',
+      uriResponsePropertyName: ''
     },
     options: [],
     className: [md[8], sm[6]]
@@ -53,13 +53,13 @@ export const model = [
     unselectedText: 'Select an option',
     hiddenUnselected: false,
     disabledUnselected: false,
-    value: 'default',
-    depends: {
-      from: 'drop',
-      uri: 'films',
-      displayKeyName: 'title',
-      valueKeyName: 'episode_id',
-      uriResponsePropertyName: 'results'
+    value: '3',
+    fillOptions: {
+      depends: 'drop',
+      uri: 'people',
+      displayKeyName: 'name',
+      valueKeyName: 'id',
+      uriResponsePropertyName: ''
     },
     options: [],
     className: [md[8], sm[6]]

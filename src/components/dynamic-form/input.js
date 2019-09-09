@@ -51,7 +51,8 @@ export const Select = (p) => {
     value = 'default',
     unselectedText = '',
     hiddenUnselected = false,
-    disabledUnselected = false
+    disabledUnselected = false,
+    current = value
   } = p
 
   return (
@@ -66,7 +67,7 @@ export const Select = (p) => {
         innerRef={innerRef}
         type={type}
         onChange={onChange}
-        defaultValue={value}
+        value={current}
       >
         <option
           value='default'
